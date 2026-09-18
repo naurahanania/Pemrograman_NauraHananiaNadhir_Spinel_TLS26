@@ -1,0 +1,59 @@
+PROGRAM TheLastAstronaut
+DECLARE
+    N, K, count, pos, eliminated_count, i : INTEGER
+    active[1..N] : ARRAY OF BOOLEAN
+
+BEGIN
+    INPUT N
+    INPUT K
+
+    FOR i FROM 1 TO N DO
+        active[i] = TRUE
+    END FOR
+
+    pos = 1
+    eliminated_count = 0
+
+    WHILE eliminated_count < N - 1 DO
+        // Hitung K astronot aktif
+        count = 0
+        WHILE count < K DO
+            IF active[pos] == TRUE THEN
+                count = count + 1
+            END IF
+            IF count < K THEN
+                pos = (pos MOD N) + 1
+            END IF
+        END WHILE
+
+        // Eleminasi astronot di posisi saat ini
+        active[pos] = FALSE
+        eliminated_count = eliminated_count + 1
+        PRINT "Dieliminasi: ", pos
+
+        // Perbarui nilai K berdasarkan nomor astronot
+        IF pos MOD 2 == 0 THEN
+            K = K + 2
+        ELSE
+            K = K - 1
+        END IF
+
+        IF K < 2 THEN
+            K = 2
+        END IF
+
+        // Geser ke astronot aktif berikutnya untuk hitungan awal
+        IF eliminated_count < N - 1 THEN
+            REPEAT
+                pos = (pos MOD N) + 1
+            UNTIL active[pos] == TRUE
+        END IF
+    END WHILE
+
+    // Cari astronot terakhir yang tersisa
+    FOR i FROM 1 TO N DO
+        IF active[i] == TRUE THEN
+            PRINT "Astronot Terakhir: ", i
+        END IF
+    END FOR
+END
